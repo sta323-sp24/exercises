@@ -37,4 +37,53 @@ tibble(
 
 ## Example 2
 
+library(repurrrsive)
+
+View(discog)
+
+tibble(disc = discog) |>
+  mutate(
+    id = map_int(disc, "id"),
+    id2 = map_int(disc, c("basic_information", "id")),
+    year = map_int(disc, c("basic_information", "year")),
+    title = map_chr(disc, c("basic_information", "title")),
+    #artist = map_chr(disc, list("basic_information", "artists", 1, "name"))
+    artists = map(disc, list("basic_information", "artists"))
+  ) |>
+  unnest_longer(artists) |>
+  mutate(
+    artist_name = map_chr(artists, "name")
+  )
+
+
+tibble(disc = discog) |>
+  hoist(
+    disc,
+    id = "id",
+    id2 = c("basic_information", "id"),
+    year = c("basic_information", "year"),
+    title = c("basic_information", "title"),
+    artists = list("basic_information", "artists")
+  ) |>
+  unnest_longer(artists) |>
+  hoist(
+    artists,
+    artist_name = "name"
+  )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
