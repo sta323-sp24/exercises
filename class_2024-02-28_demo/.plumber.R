@@ -7,8 +7,6 @@ simpsons = readRDS("simpsons.rds")
 #* @apiDescription Plumber demo for an API that demonstrates Simpson's Paradox 
 #* using data from the `datasauRus` package.
 
-
-
 #* @get /data
 function() {
   simpsons
@@ -53,6 +51,13 @@ function(formula = "y~x") {
 function(formula = "y~x") {
   lm(as.formula(formula), data=simpsons) |>
     broom::glance()
+}
+
+#* @post /model/predict
+#* @serializer print
+function(req, formula = "y~x") {
+  lm(as.formula(formula), data=simpsons) |>
+    broom::augment(newdata = req$body)
 }
 
 
