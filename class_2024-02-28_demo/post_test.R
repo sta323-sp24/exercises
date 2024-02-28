@@ -3,7 +3,7 @@ library(httr2)
 library(job)
 empty({
   library(plumber)
-  plumb(file='plumber.R')$run(port=4443)
+  plumb(file='api')$run(port=4443)
 })
 
 new_data = tibble::tibble(

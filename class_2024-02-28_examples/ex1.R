@@ -2,7 +2,7 @@
 
 #* Echo back the input
 #* @get /echo
-function(msg="") {
+function(msg="hello") {
   list(msg = paste0("The message is: '", msg, "'"))
 }
 
@@ -15,10 +15,16 @@ function() {
 }
 
 #* Return the sum of two numbers
-#* @param a The first number to add
+#* @param a:numeric The first number to add
 #* @param b The second number to add
 #* @post /sum
 #* @get /sum
 function(req, res, a, b) {
   as.numeric(a) + as.numeric(b)
+}
+
+
+#* @get /msg/<from>/<to>
+function(from, to, msg="Hello!") {
+  paste0("From: ", from, ", to: ", to, " - ", msg)
 }
