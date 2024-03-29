@@ -3,9 +3,8 @@ library(shiny)
 library(bslib)
 library(histoslider)
 
-###########################
-### Setup and data prep ###
-###########################
+
+#### Setup and data prep ####
 
 flights = read_rds("flights.rds")
 
@@ -54,9 +53,7 @@ CHOICES = list(
 
 
 
-######################
-### Side bar setup ###
-######################
+#### Side bar setup ####
 
 sidebar_acc = accordion(
   #open = c("Origin", "Destination"),
@@ -124,9 +121,8 @@ sidebar_acc = accordion(
 )
 
 
-#######################
-### nav panel setup ###
-#######################
+
+#### nav panel setup ####
 
 delay_panel = nav_panel(
   "Delay overview",
@@ -166,9 +162,8 @@ delay_panel = nav_panel(
 )
 
 
-################
-### UI setup ###
-################
+
+#### UI setup ####
 
 ui = page_navbar(
   theme = bs_theme(
@@ -188,15 +183,10 @@ ui = page_navbar(
   sidebar = sidebar(width = 275, sidebar_acc),
   nav_spacer(),
   delay_panel
-  #nav_item(
-  #  input_dark_mode(id = "dark_mode", mode = "light")
-  #)
 )
 
 
-####################
-### server setup ###
-####################
+#### server setup ####
 
 server = function(input, output, session) {
   
