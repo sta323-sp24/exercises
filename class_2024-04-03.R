@@ -31,6 +31,7 @@ ggplot(d, aes(x,y)) +
 
 n_rep = 500
 
+system.time({
 bs = purrr::map_dfr(
   seq_len(n_rep),
   function(i) {
@@ -51,6 +52,7 @@ bs = purrr::map_dfr(
     bs_upp = quantile(pred, probs = 0.975),
     .groups = "drop"
   )
+})
 
 ggplot(d, aes(x,y)) +
   geom_point(color="gray50") +
@@ -69,4 +71,30 @@ ggplot(d, aes(x,y)) +
 
 
 ## Multicore ####
+
+future::plan(future::multisession, workers=16)
+
+system.time({
+  bs = furrr::future_map_dfr(
+    seq_len(50000),
+    function(i) {
+      d |>
+        select(x, y) |>
+        slice_sample(prop = 1, replace = TRUE) |>
+        ( \(df) {
+          mutate(
+            df, iter = i,
+            pred = loess(y ~ x, data = df) |> predict()
+          )
+        })()
+    },
+    .progress = TRUE
+  ) |>
+    group_by(x, y) |>
+    summarize(
+      bs_low = quantile(pred, probs = 0.025),
+      bs_upp = quantile(pred, probs = 0.975),
+      .groups = "drop"
+    )
+})
 
